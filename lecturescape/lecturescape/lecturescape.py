@@ -34,7 +34,9 @@ class LSXBlock(XBlock):
         """
         html = self.resource_string("app/templates/app/player.html")
         frag = Fragment(html.format(self=self))
-        # frag.add_css(self.resource_string("app/css/lecturescape.css"))
+        frag.add_css(self.resource_string("app/static/app/css/jquery.jscrollpane.css"))
+        frag.add_css(self.resource_string("app/static/app/myplayer/style.css"))
+        frag.add_css(self.resource_string("app/static/app/css/common.css"))
         # frag.add_javascript(self.resource_string("static/js/src/lecturescape.js"))
         frag.initialize_js('LSXBlock')
         return frag
