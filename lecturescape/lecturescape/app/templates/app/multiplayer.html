@@ -1,0 +1,280 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" rel='stylesheet' type='text/css'>
+    <!-- styles needed by jScrollPane -->
+    <link href="{% static 'app/css/jquery.jscrollpane.css' %}" rel='stylesheet' type='text/css'>
+    <link href="{% static 'app/css/common.css' %}" rel='stylesheet' type='text/css'>
+    <link href="{% static 'app/myplayer/style.css' %}" rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+<div class="container">
+<!--     <header>
+
+    </header>
+ -->
+    <div id="tabs" class="clearfix">
+        <!-- < class="title"> -->
+        <!-- </h2> -->
+        <div><a class="tab-item" href="#" data-mode="heatmap">Watch Video</a></div>
+        <div><a class="tab-item" href="#" data-mode="summary">View Stats</a></div>
+        <!-- <div><a class="tab-item" href="#" data-mode="views">Views Over Time</a></div> -->
+        <div class="brand">LectureScape</div>
+        <div class="nav">
+            <div class="prev"><a href="#">&lt; Prev</a></div>
+            <div class="list"><a href="#">Dashboard</a></div>
+            <div class="next"><a href="#">Next &gt; </a></div>
+        </div>
+        <span class="search-button"></span>
+        <span class="search-cancel hide"></span>
+        <input type="text" class="search-bar" size="100" placeholder="search for keywords inside the video">
+        <span class="search-summary"></span>
+
+    </div>
+
+    <section id="stats">
+        <h3>Summary</h3>
+        <div class="clearfix">
+        <div class="stat-box views">
+            <div class="stat"></div>
+            <div class="desc">views</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box unique-views">
+            <div class="stat"></div>
+            <div class="desc">students started</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box complete-count">
+            <div class="stat"></div>
+            <div class="desc">students completed</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box views-per-student">
+            <div class="stat"></div>
+            <div class="desc">views per student</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box watching-time">
+            <div class="stat"></div>
+            <div class="desc">average view length</div>
+            <div class="substat"></div>
+        </div>
+        </div>
+    </section>
+
+    <section id="speed">
+        <h3>Play Speed</h3>
+        <table id="speed-table" class="sortable">
+            <tr>
+                <th class="speed"><span>Speed</span><span class="sort-option" data-default="ascending"></span></th>
+                <th class="views"><span>Views</span><span class="sort-option" data-default="ascending"></span></th>
+                <th class="percent-views"><span>% Views</span><span class="sort-option" data-default="ascending"></span></th>
+            </tr>
+        </table>
+    </section>
+
+    <section id="play-vis">
+        <div id="leftpane">
+            <div class="video-title"></div>
+            <!-- <h3>Video</h3> -->
+            <!-- <h3 id="subgoal">&nbsp;</h3> -->
+                 <!-- <video id="vid3" src="" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360">
+                </video> -->
+            <!-- <video id="example_video_1" class="video-js vjs-default-skin"
+              controls preload="auto" width="640" height="264"
+              poster="http://video-js.zencoder.com/oceans-clip.png"
+              data-setup='{"example_option":true}'>
+             <source src="http://video-js.zencoder.com/oceans-clip.mp4" type='video/mp4' />
+             <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
+             <source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />
+            </video>  -->
+<!--             <div class="flowplayer">
+                <video>
+                 <source type="video/webm" src="${staticfiles_storage.url('djmodules/video_analytics/videos/6.00x/M-600X-FA12-L24-1_100-LYbCruklFEQ.mp4')}">
+                 <source type="video/mp4" src="${staticfiles_storage.url('djmodules/video_analytics/videos/6.00x/M-600X-FA12-L24-1_100-LYbCruklFEQ.mp4')}">
+                 <source type="video/ogv" src="${staticfiles_storage.url('djmodules/video_analytics/videos/6.00x/M-600X-FA12-L23-5_100-yml22-pGOc4.mp4')}">
+                </video>
+            </div> -->
+
+            <div id="video-container">
+                <div id="video-top">
+                    <span id="prev-topic"></span>
+                    <span id="current-topic"></span>
+                    <span id="next-topic"></span>
+                </div>
+                <div id="video-overlay">overlay text</div>
+                <!-- Video -->
+                <video id="video" width="540" height="330">
+        <!--          <source src="videos/mikethefrog.webm" type="video/webm">
+                  <source src="videos/mikethefrog.ogv" type="video/ogv"> -->
+ <!--                  <source src="http://localhost:8888/edx/edxanalytics/src/edxanalytics/edxmodules/video_analytics/static/videos/6.00x/M-600X-FA12-L5-1_100-aTuYZqhEvuk.mp4" type="video/mp4"> -->
+                  <!-- <source src="http://localhost:8888/edx/edxanalytics/src/edxanalytics/edxmodules/video_analytics/static/videos/6.00x/M-600X-FA12-L24-1_100-LYbCruklFEQ.mp4" type="video/mp4"> -->
+                  <p>
+                    Your browser doesn't support HTML5 video.
+                    <a href="videos/mikethefrog.mp4">Download</a> the video instead.
+                  </p>
+                </video>
+                <div id="prev-frame"></div>
+                <div id="next-frame"></div>
+                <div id="timeline"></div>
+
+                <!-- Video Controls -->
+                <div id="video-controls">
+                    <input type="range" id="seek-bar" value="0">
+                    <!--<br/>-->
+                    <span id="play-pause" class="player-icon play pause-display"></span>
+                    <span id="time-display">0:00</span> <span id="duration-display"></span>
+                    <span id="mute" class="player-icon volume-high-display"></span>
+                    <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1.0">
+                    <span id="speed-button" data-speed="1.0">1.0x</span>
+                    <div id="speed-dropdown">
+                        <div class="speed-option" data-speed="1.0">1.0x</div>
+                        <div class="speed-option" data-speed="2.0">2.0x</div>
+                        <div class="speed-option" data-speed="4.0">4.0x</div>
+                        <div class="speed-option" data-speed="8.0">8.0x</div>
+                    </div>
+                    <!-- <div id="bookmark"> -->
+                        <span id="add-bookmark-button">Add Highlight</span>
+                    <!-- </div> -->
+                    <span id="full-screen" class="player-icon fullscreen-display"></span>
+                </div>
+            </div>
+
+<div id="bookmark-popup">
+    <div id="bookmark-thumbnail"></div>
+    <div id="bookmark-time"></div>
+    <input id="bookmark-description" type="text" length="50" placeholder="add a description"/><br/>
+    <button id="save-bookmark-button">Save</button>
+    <button id="cancel-bookmark-button">Cancel</button>
+</div>
+
+            <!-- <div id="ytplayer"></div> -->
+<!--             <div id="vis-options" class="clearfix">
+                <div><a class="" href="#" data-mode="raw_counts">views</a></div>
+                <div><a class="" href="#" data-mode="unique_counts">unique viewers</a></div>
+                <div><a class="" href="#" data-mode="replay_counts">replay</a></div>
+                <div><a class="" href="#" data-mode="skip_counts">skip</a></div>
+                <div><a class="" href="#" data-mode="play_counts">play</a></div>
+                <div><a class="" href="#" data-mode="pause_counts">pause</a></div>
+                <div><a class="" href="#" data-mode="play_kde">smoothed</a></div>
+            </div> -->
+
+        </div>
+
+        <div id="rightpane"> <!-- sidebar-2 -->
+            <!-- <h3>Transcript</h3> -->
+            <div id="transcript"></div>
+            <!-- <div id="transcript-scroll"></div> -->
+        </div>
+
+        <div id="bottompane"> <!-- sidebar-1 -->
+<!--                 <h3>Highlights
+                <small>(<span id="highlight-count"></span>)</small>
+            </h3> -->
+                    <!-- <input type="checkbox"/>Visual transitions<br/>
+                    <input type="checkbox"/>Topic transitions<br/><br/>
+                    <input type="hidden" value="40" id="slider1"/> -->
+            <div class="highlight-checkboxes">
+                <input class="from-me" type="checkbox" value="from-me-val" checked/>
+                <!-- <span class="by-me"></span> -->
+                <label for="from-me-val">by me</label>
+                <input class="from-others" type="checkbox" value="from-others-val" checked/>
+                <!-- <span class="by-others"></span> -->
+                <label for="from-others-val">by others</label>
+                <span>&nbsp;</span>
+            </div>
+            <div id="highlights">
+            </div>
+        </div>
+
+    </section>
+
+
+    <section id="time-vis">
+        <h3>Views Over Time</h3>
+    </section>
+</div>
+
+    <script src="{% static 'app/js/jquery-1.10.2.min.js' %}"></script>
+    <script src="{% static 'app/js/d3.v3.min.js' %}"></script>
+    <script src="{% static 'app/js/d3.layout.cloud.js' %}"></script>
+    <!-- the mousewheel plugin - optional to provide mousewheel support -->
+    <script src="{% static 'app/js/jscrollpane/jquery.mousewheel.js' %}"></script>
+    <!-- the jScrollPane script -->
+    <script src="{% static 'app/js/jscrollpane/jquery.jscrollpane.min.js' %}"></script>
+
+    <script src="{% static 'app/js/common.js' %}"></script>
+    <script src="{% static 'app/myplayer/Player.js' %}"></script>
+    <script src="{% static 'app/myplayer/Peak.js' %}"></script>
+    <script src="{% static 'app/myplayer/Timeline.js' %}"></script>
+    <script src="{% static 'app/myplayer/Highlight.js' %}"></script>
+    <script src="{% static 'app/myplayer/PersonalTrace.js' %}"></script>
+    <script src="{% static 'app/myplayer/Transcript.js' %}"></script>
+    <script src="{% static 'app/myplayer/Topicflow.js' %}"></script>
+    <script src="{% static 'app/myplayer/script.js' %}"></script>
+
+    <script>
+    var chart;
+    var player;
+    var options = {};
+    var duration = 0;
+    var visWidth = 780; //540;
+    var visHeight = 80; // 80
+    // var video_id = "{{ video_id }}";
+    var course = "{{ course }}";
+    // var urlPrefix = "http://localhost:8888/edx/edxanalytics/src/edxanalytics/edxmodules/video_analytics/static/";
+    var mediaUrlPrefix = "http://juhokim.com/edxanalytics/";
+
+    // var videoUrl = mediaUrlPrefix + "videos/" + course + "/v_" + video_id + ".mp4";
+    // var transcriptUrl = mediaUrlPrefix + "videos/" + course + "/v_" + video_id + ".en.srt";
+
+    var allData = {{all_data|safe}};
+    // var vtran_data = {{vtran_data|safe}};
+    // var vtran_peaks = {{vtran_peaks|safe}};
+    var videos = {{videos|safe}};
+    var allPeaks = {{all_interaction_peaks|safe}};
+    for (i in videos) {
+        console.log(videos[i].week_number, videos[i].sequence_number, videos[i].module_index,
+            "http://juhokim.com:5555/app/player/" + course + "/" + videos[i].video_id, videos[i].video_name.substr(videos[i].video_name.lastIndexOf("-")+1));
+    }
+
+    var data = {"play_kde": []};
+    var i, j, anchorVal, obj;
+    // var allDuration = 0;
+    for (i=0; i<allData.length; i++) {
+        obj = $.parseJSON(allData[i]);
+        if (typeof obj["play_kde"] === "undefined") {
+            console.log(obj["video_id"], "failed");
+            continue;
+        }
+        anchorVal = parseInt(obj["duration"] * 0.03);
+        // remove first 3% of data to prevent from overwhelming the graph
+        for (j = 0; j < obj["duration"] * 0.03; j++) {
+            obj["play_kde"][j] = anchorVal;
+        }
+        obj["play_kde"] = normalizeData(obj["play_kde"]);
+        data["play_kde"] = data["play_kde"].concat(obj["play_kde"]);
+        duration += obj["duration"]/10;
+    }
+    console.log(duration);
+    visWidth = duration;
+    $(document).ready(function(){
+        // Player.init(videoUrl);
+        // Transcript.init(transcriptUrl);
+        Timeline.init(visWidth, visHeight);
+        // duration = getDuration(video_id);
+        // $("#duration-display").text(" / " + formatSeconds(duration));
+        // Peak.init(peaks, vtran_peaks, []);
+        // Highlight.init();
+        // PersonalTrace.init();
+        // Topicflow.init();
+        multiInit();
+    });
+    </script>
+
+</body>
+</html>

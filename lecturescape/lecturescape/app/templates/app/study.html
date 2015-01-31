@@ -1,0 +1,133 @@
+{% load staticfiles %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Lecture Study</title>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" rel='stylesheet' type='text/css'>
+    <link href="{% static 'app/css/common.css' %}" rel='stylesheet' type='text/css'>
+    <link href="{% static 'app/myplayer/style.css' %}" rel='stylesheet' type='text/css'>
+    <style>
+        #main {
+            margin-left: 30px;
+        }
+        #main div {
+            margin: 15px;
+        }
+        a, a:active, a:visited {
+            color: #222;
+            font-weight: bold;
+        }
+        a:hover {
+            color: teal;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div id="tabs" class="clearfix">
+        <div class="brand">Welcome to the Video Lecture Study</div>
+    </div>
+
+    <div id="main">
+        <div id="leftpane">
+            <h2>Your Participant ID: <span id="participant-id"></span></h2>
+            <div>
+                In this study, you will watch 6.00x lecture videos with two types of video players and perform various tasks.
+                <br/><br/>
+                The experiments are designed to evaluate the usability of the interfaces, not you or your computer science knowledge, so don't worry :)
+            </div>
+            <div id="tasks">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <script src="{% static 'app/js/jquery-1.10.2.min.js' %}"></script>
+    <script src="{% static 'app/js/common.js' %}"></script>
+    <script src="{% static 'app/myplayer/Log.js' %}"></script>
+    <script src="{% static 'app/myplayer/script.js' %}"></script>
+
+    <script>
+    var pid = {{pid|safe}};
+    $(document).ready(function(){
+        $("#participant-id").text(pid);
+        Log.createTasks();
+        var numTasks = 8;
+        var i, task, url, videoID, part, qUrl, tutorialConUrl, tutorialExpUrl;
+        $("<h3/>").html("Part 0. Tutorial").appendTo($("#tasks"));
+        tutorialConUrl = "/app/player/6.00x/" + Log.tutorialCon.vid +
+                "?iid=" + Log.tutorialCon.iid +
+                "&pid=" + pid +
+                "&tid=" + Log.tutorialCon.tid +
+                "&torder=" + Log.tutorialCon.torder +
+                "&ttype=" + Log.tutorialCon.ttype +
+                "&vcode=" + Log.tutorialCon.vcode;
+        tutorialExpUrl = "/app/player/6.00x/" + Log.tutorialExp.vid +
+                "?iid=" + Log.tutorialExp.iid +
+                "&pid=" + pid +
+                "&tid=" + Log.tutorialExp.tid +
+                "&torder=" + Log.tutorialExp.torder +
+                "&ttype=" + Log.tutorialExp.ttype +
+                "&vcode=" + Log.tutorialExp.vcode;
+        $("<div/>")
+            .html("<span class='progress'>&nbsp;&nbsp;&nbsp;</span><a target='_blank' href='" + tutorialConUrl + "'>Tutorial 1</a>")
+            .appendTo($("#tasks"));
+        $("<div/>")
+            .html("<span class='progress'>&nbsp;&nbsp;&nbsp;</span><a target='_blank' href='" + tutorialExpUrl + "'>Tutorial 2</a>")
+            .appendTo($("#tasks"));
+
+        for (i = 1; i <= numTasks; i++) {
+            console.log("TASK #", (pid - 1) * numTasks + i)
+            task = Log.conditions[(pid - 1) * numTasks + i];
+            url = "/app/player/6.00x/" + task.vid +
+                "?iid=" + task.iid +
+                "&pid=" + task.pid +
+                "&tid=" + task.tid +
+                "&torder=" + task.torder +
+                "&ttype=" + task.ttype +
+                "&vcode=" + task.vcode;
+            if (i == 1) {
+                part = 1;
+                qUrl = Log.part1QuestionnaireUrl;
+                $("<h3/>").html("Part 1.").appendTo($("#tasks"));
+            } else if (i == 5) {
+                part = 2;
+                qUrl = Log.part2QuestionnaireUrl;
+                $("<h3/>").html("Part 2.").appendTo($("#tasks"));
+            } else if (i == 7) {
+                part = 3;
+                qUrl = Log.part3QuestionnaireUrl;
+                $("<h3/>").html("Part 3.").appendTo($("#tasks"));
+            }
+            $("<div/>")
+                .html("<span class='progress'>&nbsp;&nbsp;&nbsp;</span>" +
+                    "<a target='_blank' href='" + url + "'>Task " + task.torder + "</a>&nbsp;&nbsp;&nbsp;(" + task.vcode + ")")
+                    //" " + task.iid + " " + task.pid + " " + task.tid + " " + task.torder + " " + task.ttype + " " + task.vcode + " " + task.vid)
+                .appendTo($("#tasks"));
+            $("<div/>")
+                .html("<span class='progress'>&nbsp;&nbsp;&nbsp;</span>" +
+                    "<a target='_blank' href='" + qUrl + "'>Post-Task Questionnaire</a>")
+                .appendTo($("#tasks"));
+        }
+        $("<h3/>").html("Part 4. Wrap-up").appendTo($("#tasks"));
+        $("<div/>")
+            .html("<span class='progress'>&nbsp;&nbsp;&nbsp;</span><a target='_blank' href='" + Log.post1QuestionnaireUrl + "'>Post Questionnaire #1</a>")
+            .appendTo($("#tasks"));
+        $("<div/>")
+            .html("<span class='progress'>&nbsp;&nbsp;&nbsp;</span><a target='_blank' href='" + Log.post2QuestionnaireUrl + "'>Post Questionnaire #2</a>")
+            .appendTo($("#tasks"));
+        Log.add("study.html", "loaded", {"pid": pid});
+
+        $("a").click(function(){
+            $(this).closest("div").find(".progress").html("V&nbsp;&nbsp;");
+            Log.add("study.html", "click", {"pid": pid, "url": $(this).attr("href")});
+        });
+    });
+    </script>
+
+</body>
+</html>

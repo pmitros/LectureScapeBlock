@@ -1,0 +1,93 @@
+
+<div class="container">
+    <div id="tabs" class="clearfix">
+
+        <div class="brand">LectureScape</div>
+
+        <button class="done-button">DONE</button>
+        <span class="search-button"></span>
+        <span class="search-cancel hide"></span>
+        <input type="text" class="search-bar" size="100" placeholder="search for keywords inside the video">
+        <span class="search-summary"></span>
+
+    </div>
+
+    <section id="play-vis">
+        <div id="leftpane">
+            <div class="video-title"></div>
+            <div id="video-container">
+                <div id="video-top">
+                    <span id="prev-topic"></span>
+                    <span id="current-topic"></span>
+                    <span id="next-topic"></span>
+                </div>
+                <div id="video-overlay"><img/></div>
+                <!-- Video -->
+                <div id="prev-frame" class="pip-small hidden">
+                    <span class="pip-icon"></span>
+                    <span class="pip-cancel"></span>
+                    <span class="pip-bigger"></span>
+                    <span class="pip-smaller"></span>
+                </div>
+
+                <video id="video" class="clearfix" width="540" height="360">
+
+                  <p>Your browser doesn't support HTML5 video.</p>
+                </video>
+
+                <div id="timeline">
+                    <!-- <div id="phantom-cursor"></div> -->
+                </div>
+
+                <!-- Video Controls -->
+                <div id="video-controls">
+                    <input type="range" id="seek-bar" value="0">
+                    <span id="play-pause" class="player-icon play play-display"></span>
+                    <span id="time-display">0:00</span> <span id="duration-display"></span>
+                    <span id="mute" class="player-icon volume-high-display"></span>
+                    <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1.0">
+                    <span id="speed-button" data-speed="1.0">1.0x</span>
+                    <div id="speed-dropdown">
+                        <div class="speed-option" data-speed="1.0">1.0x</div>
+                        <div class="speed-option" data-speed="2.0">2.0x</div>
+                        <div class="speed-option" data-speed="4.0">4.0x</div>
+                        <div class="speed-option" data-speed="8.0">8.0x</div>
+                    </div>
+                    <span id="add-bookmark-button">Add Bookmark</span>
+                    <span id="full-screen" class="player-icon fullscreen-display"></span>
+                </div>
+            </div>
+
+            <div id="bookmark-popup">
+                <div id="bookmark-thumbnail"></div>
+                <div id="bookmark-time"></div>
+                <input id="bookmark-description" type="text" length="50" placeholder="add a description"/><br/>
+                <button id="save-bookmark-button">Save</button>
+                <button id="cancel-bookmark-button">Cancel</button>
+            </div>
+
+
+        </div>
+
+        <div id="rightpane"> <!-- sidebar-2 -->
+            <div id="transcript"></div>
+        </div>
+
+        <div id="bottompane"> <!-- sidebar-1 -->
+
+            <div class="highlight-checkboxes">
+                <input class="from-me" type="checkbox" value="from-me-val" checked/>
+                <label for="from-me-val">my bookmarks</label>
+                <input class="from-others" type="checkbox" value="from-others-val" checked/>
+                <label for="from-others-val">frequently rewatched by others</label>
+                <span>&nbsp;</span>
+            </div>
+            <div id="highlights">
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+

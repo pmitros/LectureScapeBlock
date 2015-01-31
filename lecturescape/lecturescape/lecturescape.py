@@ -32,10 +32,10 @@ class LSXBlock(XBlock):
         The primary view of the LSXBlock, shown to students
         when viewing courses.
         """
-        html = self.resource_string("static/html/lecturescape.html")
+        html = self.resource_string("app/templates/app/player.html")
         frag = Fragment(html.format(self=self))
-        frag.add_css(self.resource_string("static/css/lecturescape.css"))
-        frag.add_javascript(self.resource_string("static/js/src/lecturescape.js"))
+        # frag.add_css(self.resource_string("app/css/lecturescape.css"))
+        # frag.add_javascript(self.resource_string("static/js/src/lecturescape.js"))
         frag.initialize_js('LSXBlock')
         return frag
 

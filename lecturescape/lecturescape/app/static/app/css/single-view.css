@@ -1,0 +1,25 @@
+#speed-table .speed, #speed-table .views {
+    text-align: left;
+    width: 100px;
+}
+
+#speed-table .percent-views {
+    text-align: left;
+    width: 300px;
+}
+
+.speed-bar{
+    display: inline-block;
+    height: 0.8em;
+    background-color: steelblue;
+    margin-right: 1em;
+}
+
+#tabs .nav {
+    float:right;
+    /*margin-top: 0.6em;*/
+}
+
+#tabs .nav a {
+    margin: 0;
+}

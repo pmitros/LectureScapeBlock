@@ -1,0 +1,489 @@
+<%! 
+    from staticfiles.storage import staticfiles_storage 
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" rel='stylesheet' type='text/css'>
+    <link href="${staticfiles_storage.url('djmodules/video_analytics/css/common.css')}" rel='stylesheet' type='text/css'>
+    <link href="${staticfiles_storage.url('djmodules/video_analytics/css/single-view.css')}" rel='stylesheet' type='text/css'>
+    <script src="${staticfiles_storage.url('djmodules/video_analytics/js/jquery-1.10.2.min.js')}"></script>
+    <script src="${staticfiles_storage.url('djmodules/video_analytics/js/d3.v3.min.js')}"></script>
+    <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
+
+    <style>
+    .screenshot img{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 220px;
+        border: 1px solid #eeeeee;
+    }
+    .screenshot .summary{
+        position: absolute;
+        text-overflow: hidden;
+        overflow: hidden;
+        max-width: 170px;
+        width: 170px;
+        white-space: nowrap;
+        word-wrap: break-word;
+    }
+    .screenshot:hover {
+        background-color: #eeeeee;
+        cursor: pointer;
+    }
+    .screenshot .tooltip{
+        margin-top: 30px;
+        width: 250px;
+        position: absolute;
+        border: 1px solid #cccccc;
+        display: none;
+        z-index: 10;
+    }
+    #leftpane{
+        float:left;
+        width: 620px;
+    }
+    #sidebar{
+        float:left;
+        padding-left: 20px;
+    }
+
+    #bookmark{
+        height: 150px;
+        margin-bottom: 15px;
+    }
+
+    #add-bookmark-button{
+        float: left;
+        padding: 1em;
+        border: 0;
+        background-color: #eee;
+        width: 150px;
+        font-size: 0.9em;
+    }
+    #bookmark-thumbnail img{
+        float: left;
+        width: 220px;
+        border: 1px solid #eeeeee;
+        margin: 0 10px;
+    }
+    #bookmark-description{
+        display: none;
+        float: left;
+        margin: 0 10px;
+        padding: 0.5em;
+        width: 180px;
+    }
+    #bookmark-thumbnail, #save-bookmark-button, #cancel-bookmark-button{
+        display: none;
+    }
+    #save-bookmark-button{
+        margin-left: 10px;
+        margin-right: 20px;
+    }
+
+    #timeline{
+        position: relative;
+        width: 540px;
+        /*background-color: #bbb;*/
+        height: 5px;
+        margin-top: 80px;
+        margin-left: 3em;
+        margin-right: 3em;
+    }
+
+    .timeline-peak{
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background-color: yellow;
+        margin-top: -5px;
+        border: 1px solid #ddd;
+    }
+
+    svg {
+        margin-top: -90px;
+    }
+
+    .pp-slider { width: 150px; float:left;  -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -o-user-select: none; user-select: none; height: 30px; }
+    .pp-slider .pp-slider-scale { background-color: #aaa; height: 1px; border-bottom: 1px solid #efefef; width: 120px; margin-top: 6px; float: left; }
+    .pp-slider .pp-slider-scale .pp-slider-button { width: 12px; border-radius: 2px; border: 1px solid #adadad; height: 16px; position: relative; top: -7px; left: 0px; background-color: #efefef; cursor: pointer; }
+    .pp-slider .pp-slider-scale .pp-slider-button .pp-slider-divies { border-left: 1px solid #adadad; border-right: 1px solid #adadad; position: relative; left: 3px; top: 3px; width: 4px; height: 10px; }
+    .pp-slider .pp-slider-scale .pp-slider-button:hover { border-color: #777; background-color: #eee;  }
+    .pp-slider .pp-slider-scale .pp-slider-tooltip { width: 24px; height: 20px; position: relative; top: -5px; left: 0px; text-align: center; font-size: 10px; color: #aaa; }
+    .pp-slider .pp-slider-min { float: left; width: 15px; color: #aaa; font-size: 10px; }
+    .pp-slider .pp-slider-max { float: left; width: 15px; color: #aaa; font-size: 10px; text-align: right; }
+    .pp-slider-tooltip{
+        display: none;
+    }
+    </style>
+
+    <script>
+    var chart;
+    var player;
+    var options = {};
+    var duration = 0;
+    var visWidth = 540;
+    var visHeight = 80;
+    var video_id = '${ video_id }';
+    var data = ${data|n};
+    var videos = ${videos|n};
+    var peaks = ${peaks|n};
+
+
+
+    function updatePeaks(position){
+        var threshold = 100 - position;
+        count = 0;
+        for (var index in peaks){
+            if (peaks[index][3] >= threshold){
+                $("#peak_" + peaks[index][1]).show();
+                $("#timeline-peak-" + peaks[index][1]).show();
+                count++;
+            } else {
+                $("#peak_" + peaks[index][1]).hide();
+                $("#timeline-peak-" + peaks[index][1]).hide();
+            }
+        }
+        $("#highlight-count").text(count);
+    }
+
+    function SortByTime(a, b){
+      var aName = a[1];
+      var bName = b[1]; 
+      return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+    }
+
+
+    function displayPeaks(peaks){
+        $(".screenshot").remove();
+        $(".timeline-peak").remove();
+        peaks.sort(SortByTime);
+        for (var index in peaks){
+            // TODO: get rid of the temporary link
+            var imgPath = '/static/djmodules/video_analytics/img/v_' +  video_id + '_' + peaks[index][1] + '.jpg';
+
+            // sidebar
+            $("<div/>")
+                .attr("id", "peak_" + peaks[index][1])
+                .data("second", peaks[index][1])
+                .data("summary", peaks[index][5])
+                .addClass("screenshot").html("<span class='tooltip'>" + peaks[index][4] + "</span><span>" + formatSeconds(peaks[index][1]) + " </span> <span class='summary'>" + peaks[index][5] + "</span><br/>" + "<img src='" + imgPath + "'>")
+                .appendTo("#sidebar");
+
+            //timeline
+            var xPos = peaks[index][1]/duration * 100;
+            $("<div/>")
+                .addClass("timeline-peak")
+                .attr("id", "timeline-peak-" + peaks[index][1])
+                .css("left", xPos + "%")
+                .appendTo("#timeline");
+        }
+        updatePeaks(0);
+        // updateTimeline(0);
+    }
+
+    $(document).on("click", ".screenshot", function(){
+        player.seekTo($(this).data("second") - 3);
+        $("#video-top #current-topic").text($(this).data("summary"));
+    });
+
+    $(document).on("mouseenter", ".screenshot", function(){
+        $(this).find(".tooltip").show();
+    });
+    $(document).on("mouseleave", ".screenshot", function(){
+        $(this).find(".tooltip").hide();
+    });
+
+    $(document).on("click", "#add-bookmark-button", function(){
+        var curTime = parseInt(player.getCurrentTime());
+        var imgPath = '/static/djmodules/video_analytics/img/v_' +  video_id + '_' + curTime + '.jpg';
+        // console.log(curTime, imgPath);
+        if (!$(this).is(":disabled")){        
+            $(this).attr("disabled", "disabled");
+            $(this).data("curTime", curTime);
+            $("<img/>").attr("src", imgPath).appendTo("#bookmark-thumbnail");
+            $("#bookmark-thumbnail").show();
+            $("#bookmark-description").show();
+            $("#save-bookmark-button").show();
+            $("#cancel-bookmark-button").show();            
+        }
+        
+    });
+
+    function hideBookmarkPanel(){
+            $("#add-bookmark-button").removeAttr("disabled");
+            $("#bookmark-thumbnail img").attr("src", "");
+            $("#bookmark-description").val("");
+            $("#bookmark-thumbnail").hide();
+            $("#bookmark-description").hide();
+            $("#save-bookmark-button").hide();
+            $("#cancel-bookmark-button").hide();
+    }
+
+    $(document).on("click", "#save-bookmark-button", function(){
+        var curTime = $("#add-bookmark-button").data("curTime");
+        var description = $("#bookmark-description").val();
+        peaks.push([curTime-1, curTime, curTime+1, 100, "You bookmarked it.", description]);
+        displayPeaks(peaks);
+        hideBookmarkPanel();
+    });
+
+    $(document).on("click", "#cancel-bookmark-button", function(){
+        hideBookmarkPanel();    
+    });
+
+    $(document).ready(function(){
+        // Load the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        init();
+        $("#vis-options a").eq(4).trigger("click");
+        $("#vis-options").hide();
+
+        // hard-coded data for prototyping
+        if (video_id == "aTuYZqhEvuk") {
+            peaks = [];
+            // [3] is the confidence or strength of the peak
+            peaks = [
+                [17, 18, 19, 20, "Other students re-watched this part. Verbal explanation", "Why iterative algorithms?"], 
+                [53, 54, 55, 50, "Slide begins.", "Iterative algorithms"], 
+                [76, 81, 88, 100, "Other students reviewed this slide.", "Iterative algorithms"], 
+                [136, 137, 138, 20, "Other students re-watched this part. Verbal explanation.", "Algorithm setup"],
+                [173, 176, 178, 100, "Other students re-watched this part. Important explanation.", "Iterative multiplication by successive additions"], 
+                [203, 205, 213, 100, "Other students re-watched this part. Code example starts.", "Iterative multiplication code exmaple"], 
+                [266, 268, 270, 100, "Other students re-watched this part. Code demonstration starts.", "Running iterative multiplication code in console"],
+                [290, 291, 292, 50, "Wrap-up.", "Summary of the lecture"]
+            ];
+        }
+
+        displayPeaks(peaks);
+
+        (function ($) {
+
+            var PPSliderClass = function (el, opts) {
+                var element = $(el);
+                var options = opts;
+                var isMouseDown = false;
+                var currentVal = 0;
+
+                element.wrap('<div/>')
+                var container = $(el).parent();
+
+                container.addClass('pp-slider');
+                container.addClass('clearfix');
+
+                container.append('<div class="pp-slider-min">-</div><div class="pp-slider-scale"><div class="pp-slider-button"><div class="pp-slider-divies"></div></div><div class="pp-slider-tooltip"></div></div><div class="pp-slider-max">+</div>');
+                
+                if (typeof(options) != 'undefined' && typeof(options.hideTooltip) != 'undefined' && options.hideTooltip == true)
+                {
+                  container.find('.pp-slider-tooltip').hide();
+                }
+
+                if (typeof(options.width) != 'undefined')
+                {
+                  container.css('width',(options.width+'px'));
+                }
+                container.find('.pp-slider-scale').css('width',(container.width()-30)+'px');
+
+                var startSlide = function (e) {            
+                  
+                  isMouseDown = true;
+                  var pos = getMousePosition(e);
+                  startMouseX = pos.x;
+                  
+                  lastElemLeft = ($(this).offset().left - $(this).parent().offset().left);
+                  updatePosition(e);
+
+                  return false;
+                };
+                
+                var getMousePosition = function (e) {
+                  //container.animate({ scrollTop: rowHeight }, options.scrollSpeed, 'linear', ScrollComplete());
+                  var posx = 0;
+                  var posy = 0;
+
+                  if (!e) var e = window.event;
+
+                  if (e.pageX || e.pageY) {
+                    posx = e.pageX;
+                    posy = e.pageY;
+                  }
+                  else if (e.clientX || e.clientY) {
+                    posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                    posy = e.clientY + document.body.scrollTop  + document.documentElement.scrollTop;
+                  }
+
+                  return { 'x': posx, 'y': posy };
+                };
+
+                var updatePosition = function (e) {
+                  var pos = getMousePosition(e);
+
+                  var spanX = (pos.x - startMouseX);
+
+                  var newPos = (lastElemLeft + spanX)
+                  var upperBound = (container.find('.pp-slider-scale').width()-container.find('.pp-slider-button').width());
+                  newPos = Math.max(0,newPos);
+                  newPos = Math.min(newPos,upperBound);
+                  currentVal = Math.round((newPos/upperBound)*100,0);
+
+                  container.find('.pp-slider-button').css("left", newPos);
+                  container.find('.pp-slider-tooltip').html(currentVal+'%');
+                  container.find('.pp-slider-tooltip').css('left', newPos-6);
+                  updatePeaks(currentVal);
+                };
+
+                var moving = function (e) {
+                  if(isMouseDown){
+                    updatePosition(e);
+                    return false;
+                  }
+                };
+
+                var dropCallback = function (e) {
+                  isMouseDown = false;
+                  element.val(currentVal);
+                  if(typeof element.options != 'undefined' && typeof element.options.onChanged == 'function'){
+                    element.options.onChanged.call(this, null);
+                  }
+
+                };
+
+                container.find('.pp-slider-button').bind('mousedown',startSlide);
+
+                $(document).mousemove(function(e) { moving(e); });
+                $(document).mouseup(function(e){ dropCallback(e); });
+                
+            };
+
+            /*******************************************************************************************************/
+
+            $.fn.PPSlider = function (options) {
+                var opts = $.extend({}, $.fn.PPSlider.defaults, options);
+
+                return this.each(function () {
+                    new PPSliderClass($(this), opts);
+                });
+            }
+
+            $.fn.PPSlider.defaults = {
+                width: 150
+            };
+
+
+        })(jQuery);
+
+
+        $("#slider1").PPSlider({width: 220});        
+    });
+
+    </script>
+    <script src="${staticfiles_storage.url('djmodules/video_analytics/js/common.js')}"></script>
+    <script src="${staticfiles_storage.url('djmodules/video_analytics/js/single-view.js')}"></script>    
+</head>
+<body>
+<div class="container">
+    <header>
+    <h2 class="title">
+        <span class="video-title"></span>
+    </h2>
+    </header>
+    <div id="tabs" class="clearfix">
+        <div><a class="tab-item" href="#" data-mode="summary">Summary</a></div>
+        <div><a class="tab-item" href="#" data-mode="heatmap">Heatmap</a></div>
+        <div><a class="tab-item" href="#" data-mode="views">Views Over Time</a></div>
+        <div class="nav">
+            <div class="prev"><a href="#">&lt; Prev</a></div>
+            <div class="list"><a href="video_list">Dashboard</a></div>
+            <div class="next"><a href="#">Next &gt; </a></div>
+        </div>        
+    </div>
+
+    <section id="stats">
+        <h3>Summary</h3>
+        <div class="clearfix">
+        <div class="stat-box views">
+            <div class="stat"></div>
+            <div class="desc">views</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box unique-views">
+            <div class="stat"></div>
+            <div class="desc">students started</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box complete-count">
+            <div class="stat"></div>
+            <div class="desc">students completed</div>
+            <div class="substat"></div>
+        </div>            
+        <div class="stat-box views-per-student">
+            <div class="stat"></div>
+            <div class="desc">views per student</div>
+            <div class="substat"></div>
+        </div>
+        <div class="stat-box watching-time">
+            <div class="stat"></div>
+            <div class="desc">average view length</div>
+            <div class="substat"></div>
+        </div>
+        </div>
+    </section>
+
+    <section id="speed">
+        <h3>Play Speed</h3>
+        <table id="speed-table" class="sortable">
+            <tr>
+                <th class="speed"><span>Speed</span><span class="sort-option" data-default="ascending"></span></th>
+                <th class="views"><span>Views</span><span class="sort-option" data-default="ascending"></span></th>
+                <th class="percent-views"><span>% Views</span><span class="sort-option" data-default="ascending"></span></th>
+            </tr>
+        </table>
+    </section>    
+
+    <section id="play-vis">
+        <div id="leftpane">
+            <h3 id="subgoal">&nbsp;</h3>
+            <div id="ytplayer"></div>
+            <div id="bookmark">
+                <button id="add-bookmark-button">Add Highlight</button>
+                <div id="bookmark-thumbnail"></div>
+                <input id="bookmark-description" type="text" length="50" placeholder="type in description"/><br/>
+                <button id="save-bookmark-button">Save</button>
+                <button id="cancel-bookmark-button">Cancel</button>
+            </div>
+            <div id="vis-options" class="clearfix">
+                <div><a class="" href="#" data-mode="raw_counts">views</a></div>
+                <div><a class="" href="#" data-mode="unique_counts">unique viewers</a></div>
+                <div><a class="" href="#" data-mode="replay_counts">replay</a></div>
+                <div><a class="" href="#" data-mode="skip_counts">skip</a></div>
+                <div><a class="" href="#" data-mode="play_counts">play</a></div>
+                <div><a class="" href="#" data-mode="pause_counts">pause</a></div>
+            </div>
+            <div id="timeline"></div>
+        </div>
+        <div id="sidebar">
+            <h3>Highlights <small>(<span id="highlight-count"></span>)</small></h3>
+            <div>
+                <input type="checkbox"/>My highlights<br/>
+                <input type="checkbox"/>Other learners<br/>
+                <input type="checkbox"/>Visual transitions<br/>
+                <input type="checkbox"/>Topic transitions<br/><br/>
+                <input type="hidden" value="40" id="slider1"/>
+                <span>&nbsp;</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="time-vis">
+        <h3>Views Over Time</h3>
+    </section>
+</div>
+
+</body>
+</html>
