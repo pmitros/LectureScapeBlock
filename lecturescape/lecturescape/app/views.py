@@ -89,7 +89,9 @@ def player(request, course, vid):
     """
     http://localhost:5555/app/player/6.00x/aTuYZqhEvuk/
     """
-    # print course, vid
+
+    print "hello peter"
+    print course, vid
     mongodb = get_db()
     [data, peaks, vtran_data, vtran_peaks] = video_single_query(vid)
     videos = video_info_query(course)

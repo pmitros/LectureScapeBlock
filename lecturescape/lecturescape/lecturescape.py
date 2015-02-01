@@ -37,7 +37,21 @@ class LSXBlock(XBlock):
         frag.add_css(self.resource_string("app/static/app/css/jquery.jscrollpane.css"))
         frag.add_css(self.resource_string("app/static/app/myplayer/style.css"))
         frag.add_css(self.resource_string("app/static/app/css/common.css"))
-        # frag.add_javascript(self.resource_string("static/js/src/lecturescape.js"))
+        frag.add_javascript(self.resource_string("app/static/app/js/jquery-1.10.2.min.js"))
+        frag.add_javascript(self.resource_string("app/static/app/js/d3.v3.min.js"))
+        frag.add_javascript(self.resource_string("app/static/app/js/d3.layout.cloud.js"))
+        frag.add_javascript(self.resource_string("app/static/app/js/jscrollpane/jquery.mousewheel.js"))
+        frag.add_javascript(self.resource_string("app/static/app/js/jscrollpane/jquery.jscrollpane.min.js"))
+        frag.add_javascript(self.resource_string("app/static/app/js/common.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Player.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Peak.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Timeline.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Highlight.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/PersonalTrace.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Transcript.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Topicflow.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/Log.js"))
+        frag.add_javascript(self.resource_string("app/static/app/myplayer/script.js"))
         frag.initialize_js('LSXBlock')
         return frag
 
@@ -62,8 +76,6 @@ class LSXBlock(XBlock):
         return [
             ("LSXBlock",
              """<vertical_demo>
-                <lecturescape/>
-                <lecturescape/>
                 <lecturescape/>
                 </vertical_demo>
              """),
