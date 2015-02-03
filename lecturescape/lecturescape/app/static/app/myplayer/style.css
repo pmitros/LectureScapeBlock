@@ -503,7 +503,7 @@ button:hover {
 }
 
 .play-display{
-    background-image: url(../img/play.png);
+    /*background-image: url(../img/play.png);*/
     margin: 0 1em 0 0.5em;
 }
 

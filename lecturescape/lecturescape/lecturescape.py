@@ -7,6 +7,9 @@ from xblock.fields import Scope, Integer
 from xblock.fragment import Fragment
 from django.template import Context, Template
 
+
+from django.core.urlresolvers import reverse
+import os
 import sys
 import time
 import json
@@ -68,17 +71,14 @@ class LSXBlock(XBlock):
         [data, peaks, vtran_data, vtran_peaks] = self.video_single_query(vid)
         videos = self.video_info_query(course)
 
-        format_data = {
-            'videoUrl': self.runtime.local_resource_url(
-                self, 'app/static/app/videos/6.00x/v_aTuYZqhEvuk.mp4'),
-            'transcriptUrl': self.runtime.local_resource_url(
-                self, 'app/static/app/videos/6.00x/v_aTuYZqhEvuk.en.srt'),
-            'data': data, 'vtran_data': vtran_data, 'vtran_peaks': vtran_peaks, 'videos': videos, 'peaks': peaks,
-            'video_id': 'aTuYZqhEvuk', 'course': '6.00x',
-        }
+        static_files = os.listdir('/Users/PeterGithaiga/EdX/LectureScapeBlock/lecturescape/lecturescape/app/static/app/img')
 
-        html = self.resource_string("app/templates/app/player.html")
-        frag = Fragment(html.format(self=self))
+        urls = {}
+        for x in xrange(len(static_files)):
+            urls[static_files[x].split('.')[0]] = self.runtime.local_resource_url(self, "public/img/" + static_files[x])
+
+        html = self.render_template("app/templates/app/player.html", urls)
+        frag = Fragment(html)
         frag.add_css(self.resource_string("app/static/app/css/jquery.jscrollpane.css"))
         frag.add_css(self.resource_string("app/static/app/myplayer/style.css"))
         frag.add_css(self.resource_string("app/static/app/css/common.css"))
@@ -98,10 +98,13 @@ class LSXBlock(XBlock):
         frag.add_javascript(self.resource_string("app/static/app/myplayer/Log.js"))
         frag.add_javascript(self.resource_string("app/static/app/myplayer/script.js"))
 
-        script = self.render_template('app/static/app/js/final.js', format_data)
-        frag.add_javascript(script)
-
-        frag.initialize_js('LSXBlock')
+        frag.add_javascript(self.resource_string("app/static/app/js/lecturescape.js"))
+        frag.initialize_js('LSXBlock', {'urls':urls, 'videoUrl': self.runtime.local_resource_url(
+            self, 'app/static/app/videos/6.00x/v_aTuYZqhEvuk.mp4'),
+            'transcriptUrl': self.runtime.local_resource_url(
+                self, 'app/static/app/videos/6.00x/v_aTuYZqhEvuk.en.srt'),
+            'data': data, 'vtran_data': vtran_data, 'vtran_peaks': vtran_peaks, 'videos': videos, 'peaks': peaks,
+            'video_id': 'aTuYZqhEvuk', 'course': '6.00x'})
         return frag
 
     def get_db(self):
