@@ -5,7 +5,7 @@ var Highlight = function ($, window, document) {
     // var peaks = [];
     var api;
 
-    function init() {
+    function init(duration, visWidth) {
         // console.log(peaks_data);
         // peaks = peaks_data;
         bindEvents();
@@ -24,7 +24,7 @@ var Highlight = function ($, window, document) {
                 // [290, 291, 292, 50, "Wrap-up.", "Summary of the lecture"]
             ];
         } */
-        displayPeaks();
+        displayPeaks(duration, visWidth);
         addScrollbar();
     }
 
@@ -372,7 +372,7 @@ var Highlight = function ($, window, document) {
         Log.add("Highlight", "timelinePeakClick", {"uid": $(this).data("uid")});
     }
 
-    function getThumbnailUrl(curTime) {
+    function getThumbnailUrl(curTime, mediaUrlPrefix, course, video_id) {
         // var imgPath = '/static/djmodules/video_analytics/img/v_' +  video_id + '_' + curTime + '.jpg';
         // var imgPath = 'http://localhost:8888/edx/edxanalytics/src/edxanalytics/edxmodules/video_analytics/static/img/v_' +  video_id + '_' + curTime + '.jpg';// console.log(curTime, imgPath);
         return mediaUrlPrefix + "thumbs/" + course + "/v_" + video_id + '_' + curTime + '.jpg';
@@ -447,7 +447,7 @@ var Highlight = function ($, window, document) {
         refreshScrollbar();
     }
 
-    function displayPeaks(){
+    function displayPeaks(duration, visWidth){
         var peaks = getCurrentPeaks();
         console.log("PEAKS", peaks);
         $(".screenshot").remove();

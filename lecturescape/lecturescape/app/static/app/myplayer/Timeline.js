@@ -17,7 +17,7 @@ var Timeline = function ($, window, document) {
     var timelineBox;
     var curPhantomX;
 
-    function init(visWidth, visHeight){
+    function init(visWidth, visHeight, duration, data){
         w = visWidth;
         h = visHeight;
         xScale = d3.scale.linear().domain([0, duration]).range([0, w]);

@@ -34,8 +34,8 @@ var Topicflow = function ($, window, document) {
     var currentTopic;
     var currentIndex = -1;
 
-    function init() {
-        loadTopics();
+    function init(course, video_id) {
+        loadTopics(course, video_id);
         bindEvents();
     }
 
@@ -49,7 +49,7 @@ var Topicflow = function ($, window, document) {
         Log.add("Topicflow", "topicClick", {"topic": clickedTopic});
     }
 
-    function loadTopics() {
+    function loadTopics(course, video_id) {
         var course_name = course + "-Fall-2012";
         var segtype = gup("segtype") || "peakBoundary";
         var maxwords = parseInt(gup("maxwords")) || 4;

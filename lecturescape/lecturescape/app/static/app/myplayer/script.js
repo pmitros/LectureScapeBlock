@@ -117,7 +117,7 @@ function displayPlayRates(){
 */
 
 /* display video title */
-function displayTitle(video_id){
+function displayTitle(video_id, videos){
     for (var index in videos){
         if (video_id == videos[index]["video_id"])
             $(".video-title").text(videos[index]["video_name"]);
@@ -126,7 +126,7 @@ function displayTitle(video_id){
 
 
 /* get duration information from the videos data */
-function getDuration(video_id){
+function getDuration(video_id, videos){
     var value = 0;
     for (var index in videos){
         if (video_id == videos[index]["video_id"])
@@ -137,7 +137,7 @@ function getDuration(video_id){
 
 
 /* Add prev and next links in the nav bar */
-function displayNav(video_id){
+function displayNav(video_id, videos){
     for (var index in videos){
         if (video_id == videos[index]["video_id"]){
             var prev_index = 0;
@@ -159,10 +159,10 @@ function displayNav(video_id){
 }
 
 /* Init routine that adds event handlers, displays info, and sets initial options */
-function init(){
+function init(video_id, data, params, videos, duration){
     bindEvents();
-    displayTitle(video_id);
-    displayNav(video_id);
+    displayTitle(video_id, videos);
+    displayNav(video_id, videos);
     // displayStats();
     // displayPlayRates();
 

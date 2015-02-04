@@ -38,10 +38,10 @@ var Player = function ($, window, document) {
     var loadedImages = 0;
     var imageArray = [];
 
-    function preloadThumbnails() {
+    function preloadThumbnails(duration, mediaUrlPrefix, course, video_id) {
         var i, tempImage;
         for (i = 0; i < duration; i++) {
-            imageArray.push(Highlight.getThumbnailUrl(i));
+            imageArray.push(Highlight.getThumbnailUrl(i, mediaUrlPrefix, course, video_id));
         }
         for (i = 0; i < imageArray.length; i++) {
             tempImage = new Image();
@@ -62,7 +62,7 @@ var Player = function ($, window, document) {
     }
 
     function load(videoUrl) {
-        video.src = videoUrl;
+        // video.src = videoUrl;
         video.load();
         // Autoplay
         // play();
@@ -117,7 +117,7 @@ var Player = function ($, window, document) {
             video.currentTime += adjustedSpeed;
     }
 
-    function pause(forceRecord) {
+    function pause(forceRecord, duration) {
         if (video.paused && typeof forceRecord === "undefined")
             return;
         video.pause();
@@ -130,7 +130,7 @@ var Player = function ($, window, document) {
         });
         // if (!isSegmentOn)
         //     isSegmentOn = true;
-        PersonalTrace.addSegment();
+        PersonalTrace.addSegment(duration);
     }
 
     function changeSpeed(rate) {
@@ -172,7 +172,7 @@ var Player = function ($, window, document) {
             play();
             Log.add("Player", "playButtonClick", {"state": "pause to play", "curTime": getCurrentTime()});
         } else {
-            pause();
+            pause(duration);
             Log.add("Player", "playButtonClick", {"state": "play to pause", "curTime": getCurrentTime()});
         }
     }

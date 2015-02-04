@@ -331,7 +331,7 @@ body {
 }
 .search-button{
     float: right;
-    background-image: url(../img/search.png);
+    /*background-image: url(../img/search.png);*/
     margin: 0 1em 0 0.5em;
     display: inline-block;
     background-repeat: no-repeat;
@@ -508,7 +508,7 @@ button:hover {
 }
 
 .pause-display{
-    background-image: url(../img/pause.png);
+    /*background-image: url(../img/pause.png);*/
     margin: 0 1em 0 0.5em;
 }
 
@@ -528,12 +528,12 @@ button:hover {
 }
 
 .volume-high-display{
-    background-image: url(../img/volume_high.png);
+    /*background-image: url(../img/volume_high.png);*/
     margin: 0 0 0 1em;
 }
 
 .fullscreen-display{
-    background-image: url(../img/fullscreen.png);
+    /*background-image: url(../img/fullscreen.png);*/
     margin: 0 1em;
     float: right;
     display: none;
