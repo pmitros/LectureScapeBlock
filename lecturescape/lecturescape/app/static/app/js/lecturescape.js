@@ -290,7 +290,7 @@ function LSXBlock(runtime, element, runtime_data) {
                 video.currentTime += adjustedSpeed;
         }
 
-        function pause(forceRecord, duration) {
+        function pause(forceRecord) {
             if (video.paused && typeof forceRecord === "undefined")
                 return;
             video.pause();
@@ -1537,7 +1537,7 @@ function LSXBlock(runtime, element, runtime_data) {
 
             // phantom cursor
             chart.append("image")
-                .attr("xlink:href", "/static/app/img/cursor.png")
+                .attr("xlink:href", "https://s3.amazonaws.com/lecturescape-videos/img/pause.png")
                 .attr("id", "phantom-cursor")
                 .attr("x", "20px")
                 .attr("y", "20px")

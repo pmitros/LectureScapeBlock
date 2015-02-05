@@ -71,13 +71,13 @@ class LSXBlock(XBlock):
         [data, peaks, vtran_data, vtran_peaks] = self.video_single_query(vid)
         videos = self.video_info_query(course)
 
-        static_files = os.listdir('/Users/PeterGithaiga/EdX/LectureScapeBlock/lecturescape/lecturescape/app/static/app/img')
+        # static_files = os.listdir('/Users/PeterGithaiga/EdX/LectureScapeBlock/lecturescape/lecturescape/app/static/app/img')
 
-        urls = {'videoUrl': 'public/videos/6.00x/v_aTuYZqhEvuk.mp4'}
-        for x in xrange(len(static_files)):
-            urls[static_files[x].split('.')[0]] = self.runtime.local_resource_url(self, "public/img/" + static_files[x])
+        # urls = {'videoUrl': 'public/videos/6.00x/v_aTuYZqhEvuk.mp4'}
+        # for x in xrange(len(static_files)):
+        #     urls[static_files[x].split('.')[0]] = self.runtime.local_resource_url(self, "public/img/" + static_files[x])
 
-        html = self.render_template("app/templates/app/player.html", urls)
+        html = self.render_template("app/templates/app/player.html")
         frag = Fragment(html)
         frag.add_css(self.resource_string("app/static/app/css/jquery.jscrollpane.css"))
         frag.add_css(self.resource_string("app/static/app/css/common.css"))
@@ -100,7 +100,7 @@ class LSXBlock(XBlock):
 
         frag.add_javascript(self.resource_string("app/static/app/js/lecturescape.js"))
         #frag.add_resource_url('public/videos/6.00x/v_aTuYZqhEvuk.en.srt', 'text/plain')
-        frag.initialize_js('LSXBlock', {'urls':urls, 'mediaUrl': 'https://s3.amazonaws.com/lecturescape-videos/',
+        frag.initialize_js('LSXBlock', {'mediaUrl': 'https://s3.amazonaws.com/lecturescape-videos/',
             'videoUrl': 'https://s3.amazonaws.com/lecturescape-videos/v_aTuYZqhEvuk.mp4',
             'transcriptUrl': self.runtime.local_resource_url(self, 'public/videos/6.00x/v_aTuYZqhEvuk.en.srt'),
             'data': data, 'vtran_data': vtran_data, 'vtran_peaks': vtran_peaks, 'videos': videos, 'peaks': peaks,

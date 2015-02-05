@@ -230,7 +230,7 @@ body {
 }
 
 #prev-frame .pip-icon {
-    background-image: url(../img/pin.png);
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/pin.png");
     display: inline-block;
     float: left;
     width: 28px;
@@ -331,7 +331,7 @@ body {
 }
 .search-button{
     float: right;
-    /*background-image: url(../img/search.png);*/
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/search.png");
     margin: 0 1em 0 0.5em;
     display: inline-block;
     background-repeat: no-repeat;
@@ -503,37 +503,37 @@ button:hover {
 }
 
 .play-display{
-    /*background-image: url(../img/play.png);*/
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/play.png");
     margin: 0 1em 0 0.5em;
 }
 
 .pause-display{
-    /*background-image: url(../img/pause.png);*/
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/pause.png");
     margin: 0 1em 0 0.5em;
 }
 
 .volume-mute-display{
-    background-image: url(../img/volume_mute.png);
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/mute.png");
     margin: 0 0 0 1em;
 }
 
 .volume-low-display{
-    background-image: url(../img/volume_low.png);
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/volume_low.png");
     margin: 0 0 0 1em;
 }
 
 .volume-medium-display{
-    background-image: url(../img/volume_medium.png);
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/volume_medium.png");
     margin: 0 0 0 1em;
 }
 
 .volume-high-display{
-    /*background-image: url(../img/volume_high.png);*/
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/volume_high.png");
     margin: 0 0 0 1em;
 }
 
 .fullscreen-display{
-    /*background-image: url(../img/fullscreen.png);*/
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/fullscreen.png");
     margin: 0 1em;
     float: right;
     display: none;
@@ -580,7 +580,7 @@ button:hover {
     z-index: 3000;
     position: fixed;
     display: none;
-    background-image: url(../img/cursor.png);
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/cursor.png");
     top: 100px;
     left: 100px;
     width: 17.5px;
@@ -1024,8 +1024,7 @@ input.from-others + label:before {
 
 .screenshot:hover .screenshot-pin {
     /*display: inline-block;*/
-    background-image: url(../img/pin.png);
-}
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/pin.png");}
 
 .screenshot.active .screenshot-pin {
     /*display: inline-block;*/
@@ -1034,7 +1033,7 @@ input.from-others + label:before {
 
 .screenshot.pinned .screenshot-pin {
     /*display: inline-block;*/
-    background-image: url(../img/pin.png);
+    background-image: url("https://s3.amazonaws.com/lecturescape-videos/img/pin.png");
 }
 
 .screenshot-pin {
