@@ -1,10 +1,10 @@
 /**
     Generic definitions
  **/
-body {
+.container {
     font-family: 'Open Sans', sans-serif;
     /*margin: 3em;*/
-    width: 900px;
+    width: 100%;
 }
 
 .clearfix:after {

@@ -3539,4 +3539,6 @@ function LSXBlock(runtime, element, runtime_data) {
     Topicflow.init();
     init();
     Log.add("page", "loaded", {});
+
+    $('.vertical').css({'border': 'none'});
 }
