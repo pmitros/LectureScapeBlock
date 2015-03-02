@@ -39,10 +39,10 @@ tr:nth-child(odd) {
 tr:nth-child(even) {
     background-color:#fff;
 }
-/*section {
+#play-vis {
     display: none;
-    margin: 1em;
-}*/
+    margin-top: 1em;
+}
 table.sortable th {
     cursor: pointer;
     height: 2em;

@@ -87,19 +87,7 @@ class LSXBlock(XBlock):
         frag.add_javascript(self.resource_string("app/static/app/js/d3.layout.cloud.js"))
         frag.add_javascript(self.resource_string("app/static/app/js/jscrollpane/jquery.mousewheel.js"))
         frag.add_javascript(self.resource_string("app/static/app/js/jscrollpane/jquery.jscrollpane.min.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/js/common.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Player.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Peak.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Timeline.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Highlight.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/PersonalTrace.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Transcript.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Topicflow.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/Log.js"))
-        # frag.add_javascript(self.resource_string("app/static/app/myplayer/script.js"))
-
         frag.add_javascript(self.resource_string("app/static/app/js/lecturescape.js"))
-        #frag.add_resource_url('public/videos/6.00x/v_aTuYZqhEvuk.en.srt', 'text/plain')
         frag.initialize_js('LSXBlock', {'mediaUrl': 'https://s3.amazonaws.com/lecturescape-videos/',
             'videoUrl': 'https://s3.amazonaws.com/lecturescape-videos/v_aTuYZqhEvuk.mp4',
             'transcriptUrl': self.runtime.local_resource_url(self, 'public/videos/6.00x/v_aTuYZqhEvuk.en.srt'),
